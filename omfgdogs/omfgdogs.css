@@ -1,0 +1,27 @@
+
+@media only screen and (min-width: 992px) {
+	body { 
+    	background-image: url("omfgdogs.gif");
+	}
+	p {
+		color: transparent;
+	}
+}
+
+@media only screen and (max-width: 991px) {
+	body { 
+    	p {
+    		color: black;
+    	}
+	}
+}
+
+div {
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+	font-size: 40px;
+}
+a {
+	color: white;
+}

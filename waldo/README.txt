@@ -1,0 +1,5 @@
+-	upload to godaddy
+-	link godaddy to github
+-	black color?
+-	landscape
+-	mobile colors

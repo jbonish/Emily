@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Fecesbook</title>
+	<script>
+		function writeToPage()
+		{
+			var input = document.getElementById("msg").value;
+			var output = document.getElementById("status");
+			var elem = document.createElement('div');
+			var firstElem = output.firstChild;
+			output.insertBefore(elem, firstElem);
+			var text_box = document.getElementById("msg");
+			text_box.value = '';
+			var time = new Date();
+			var MM = time.getMonth() + 1;
+			var dd = time.getDate();
+			var yyyy = time.getFullYear();
+			var hh = time.getHours();
+			var mm = time.getMinutes();
+			elem.innerHTML = MM + "/" + dd + "/" + yyyy + 
+								" " + hh + ":" + mm + " - " + input;
+			localStorage.setItem(time, elem.innerHTML);
+		}
+
+		function loadLocal()
+		{
+			for (key in localStorage){
+				var Lelem = document.createElement('div');
+				var Loutput = document.getElementById("status");
+				var LfirstElem = Loutput.firstChild;
+				Lelem.innerHTML = localStorage[key];
+				Loutput.insertBefore(Lelem, LfirstElem);
+			}
+		}
+	</script>
+</head>
+
+<body  onload = "loadLocal()" >
+	<h1>Fecebook</h1>
+	<div id="nav">
+		<ul>
+			<li id="home">Home</li>
+			<li id="groups">Groups</li>
+			<li id="profile">Profile</li>
+			<li id="contacts">Contacts</li>
+			<li id="inbox">Inbox</li>
+			<li id="applications">Applications</li>
+		</ul>
+	</div>
+	<h2 id="fullname">Barney Gumble</h2>
+	<h3>What are you thinking about? <input type="text" onchange="writeToPage()"id="msg" name="msg" size="30" /></h3>
+	<h3>Updates</h3>
+	<div id="status">
+	</div>
+	<div id="yesterday">
+		<h3>Updates from yesterday:</h3>
+		<ul>
+			<li>Alice is now connected to Bob</li>
+			<li>Tom recommends Jerry</li>
+			<li>Harry just returned from a trip from Curaco</li>
+		</ul>
+	</div>
+	<div id="longlongtimeago">
+		<h3>Updates from long long time ago:</h3>
+		<ul>
+			<li>Harry just returned from a trip from Curaco</li>
+			<li>Joan is now connected to Mary</li>
+			<li>Steven is now connected to James</li>
+		</ul>
+	</div>
+</body>
+</html>

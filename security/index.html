@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Game Center Security Issues</title>
+	<meta charset='utf-8'>
+	<link rel="stylesheet" type="text/css" href="security.css">
+</head>
+
+<body>
+	<h1>Game Center Security Issues Report</h1>
+	<div>
+			<h2>Introduction</h2>
+			<p>The following document reports the potential security threats discovered at http://pcoughran2048.herokuapp.com/, Patrick Coughran's web app which stores 2048 scores. My job was to determine whether or not the app is ready for public use. My findings suggest that the app is too vulnerable at this point to trust in the dangerous world wide web.</p>
+	</div>
+	<div>
+			<h2>Methodology</h2>
+			<p>Starting with black box methods, i.e. attacking without observing source code, I immediately found the app to be vulnerable to at least silly attacks by inserting a cartoon picture of dog poop as my username, which the website did in fact display. I realized that this made it likely to be vulnerable to the most basic attack, inputting a script tag. After confirming, I looked at Patrick's code to find more vulnerabilities using third-party tools.</p>
+	</div>
+	<div>
+			<h2>Abstract of findings</h2>
+			<p>The site is riddled with basic security problems. An attacker can steal cookie information from the site, change the site's content, mess with the database associated with the site, or input invalid or unfair data.</p>
+	</div>
+	<div>
+			<h2>Issues Found</h2>
+			<ol>
+
+				<li><h3>Cross Site Scripting (XSS) in GET API</h3>
+					<p>One of the main threat and one of the easiest vulnerabilities to take advantage of with this app is its lack of input validation. Without checking if some input (like the username) is malicious, an attacker can use cross site scripting to maliciously attack a website. As shown in this picture,
+					<img src = 'Security.png' alt = "XSS example"><br>I was able to input a script tag whose source came from the website ha.ckers.org which gave example script codes to show what is capable with XSS. In this case, the code only raised an alert box, but much more malicious things are possible without input validation; the code used for my attack also would have accessed any cookies stored and displayed them in the alert box as well -- <p class = "code">document.write ("This is remote text via xss.js located at ha.ckers.org " + document.cookie);<br> alert ("This is remote text via xss.js located at ha.ckers.org " + document.cookie);</p>
+					<p>You can imagine why an attacker being able to access these things can be dangerous.</p>
+					<h4>Severity -- High</h4>
+					<p>A wide range of malicious attacks can be carried out with XSS. As shown (sort of) in my example, cookie information can be stolen, which can sometimes be very dangerous. It would also be easy to simply go in and delete all of the HTML in the document, or manipulate it. The fact that so many things can be done with this method makes it a severe risk, but one that is fairly simple to fix</p>
+					<h4>Fix it</h4>
+					<p>To fix this vulnerability, just add server-side input validation. If '&lt' or '&gt' are found, delete them or encode them. Checking input server-side is key as proxies can be used to bypass client-side validation.</p></li>
+
+				<li><h3>Loose Cross-Origin Resource Sharing in POST API</a></h3>
+					<p>A common mistake in cross-origin resource sharing is to allow cross-origin JavaScript requests from all domains. This can be seen in Patrick's code here <p class = 'code'>res.header("Access-Control-Allow-Origin", "*");</p>This allows people to POST to the app from anywhere, and they can post whatever they want.</p>
+					<h4>Severity -- Low-Medium</h4>
+					<p>Assuming the previous problem with input validation is fixed, the most you have to worry about is a user posting a score of 99999 or something to skew the high scores.</p>
+					<h4>Fix it</h4>
+					<p>To disallow people from posting from anywhere, change the * to the 2048 game URL. It will be possible to cheat the score in other ways, but not with something like curl now.</p></li>
+
+				<li><h3>Invalid Data Accepted in POST API and scores.json</h3>
+					<p>As seen by this screenshot of /scores.json page of the web app,<img src = 'JSON.png' alt = "Invalid JSON example"><br>I was able to post an invalid input for the grid. You can input any string here.</p>
+					<h4>Severity -- Low</h4>
+					<p>Though people can input weird things instead of JSON, it won't be overly dangerous as long as the XSS problem has been fixed.</p>
+					<h4>Fix it</h4>
+					<p>To fix this small problem, simply check all inputs on the server side to make sure they are of the format desired.</p></li>
+			</ol>
+	</div>
+	<div>
+			<h2>Conclusion</h2>
+			<p>The site needs multiple security measures implemented before deployment. It's a good thing I was hired, because malicious attacks could have led the site to become corrupt with invalid data. The most important aspect to implement is server-side input validation. I can do the job, for about $7 billion/hr. </p>
+	</div>
+</body>
+
+</html>
